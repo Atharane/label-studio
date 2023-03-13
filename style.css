@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+.form{
+    margin: 0.5rem;
+}
+
+input[type="text"] {
+  font-family: "Inter", sans-serif;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border: 1px solid #228be6;
+}
+
+button[type="submit"] {
+  outline: none;
+  font-family: "Inter", sans-serif;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#imageform > button[type="submit"] {
+  background-color: #228be6;
+}
+
+#tagform > button[type="submit"] {
+  background-color: #fab005;
+}
+
+.new  {
+background-color: #FF0000;
+background-color: #FF7F00;
+background-color: #FFFF00;
+background-color: #00FF00;
+background-color: #0000FF;
+background-color: #4B0082;
+background-color: #8B00FF;
+}

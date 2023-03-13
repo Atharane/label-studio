@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Include Label Studio stylesheet -->
+    <link
+      href="https://unpkg.com/label-studio@0.4.0/build/static/css/main.14acfaa5.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Object Detection</title>
+  </head>
+  <body>
+    <form class="form" id="imageform" onsubmit="changeImage(event)">
+      <input
+        placeholder="Enter image url"
+        class="input-field"
+        id="image-url"
+        type="text"
+      />
+
+      <button type="submit">Add image</button>
+    </form>
+
+    <form class="form" id="tagform" onsubmit="addTag(event)">
+      <input
+        placeholder="Enter tag"
+        class="input-field"
+        id="tag-url"
+        type="text"
+      />
+
+      <button type="submit">Add tag</button>
+    </form>
+
+    <!-- Create the Label Studio container -->
+    <div id="label-studio"></div>
+
+    <!-- Include the Label Studio library -->
+    <script src="https://unpkg.com/label-studio@0.4.0/build/static/js/main.0249ea16.js"></script>
+
+    <!-- Initialize Label Studio -->
+    <script>
+      let url =
+        "https://images.unsplash.com/photo-1597484661973-ee6cd0b6482c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cGxhY2Vob2xkZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60";
+
+      //   colors for the tags
+      const colors = [
+        "#FF0000",
+        "#FF7F00",
+        "#FFFF00",
+        "#00FF00",
+        "#0000FF",
+        "#4B0082",
+        "#8B00FF",
+      ];
+
+      let labels = [];
+
+      function changeImage() {
+        event.preventDefault();
+
+        if (document.getElementById("image-url").value !== "") {
+          url = document.getElementById("image-url").value;
+        }
+
+        // clear the input field
+        document.getElementById("image-url").value = "";
+
+        var labelStudio = new LabelStudio("label-studio", {
+          config: `
+      <View>
+        <Image name="img" value="$image" zoom="true"></Image>
+        <RectangleLabels name="tag" toName="img">
+          ${labels
+            .map(
+              (label) =>
+                `<Label value="${label.value}" background="${label.background}"></Label>`
+            )
+            .join("\n")}
+        </RectangleLabels>
+      </View>
+    `,
+
+          interfaces: [
+            "update",
+            "controls",
+            "side-column",
+            "completions:menu",
+            "completions:add-new",
+            "completions:delete",
+          ],
+
+          task: {
+            data: {
+              image: url,
+            },
+          },
+
+          onLabelStudioLoad: function (LS) {
+            var c = LS.completionStore.addCompletion({ userGenerate: true });
+            LS.completionStore.selectCompletion(c.id);
+          },
+
+          onSubmitCompletion: function (LS, C) {
+            console.log(JSON.stringify(C.serializeCompletion()));
+            alert("Submit button pressed");
+          },
+
+          onUpdateCompletion: function (LS, C) {
+            console.log(JSON.stringify(C.serializeCompletion()));
+            alert("Update button pressed");
+          },
+        });
+      }
+
+      function addTag() {
+        event.preventDefault();
+
+        // get the tag from the input
+        let tag = document.getElementById("tag-url").value;
+
+        // clear the input field
+        document.getElementById("tag-url").value = "";
+
+        // add the tag to the labels array
+        labels.push({
+          value: tag,
+          background: colors[Math.floor(Math.random() * colors.length)],
+        });
+
+        // reload the page
+        changeImage();
+      }
+    </script>
+  </body>
+</html>
