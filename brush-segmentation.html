@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="style.css" />
 
-    <title>Object Detection</title>
+    <title>Brush Segmentation</title>
   </head>
   <body>
     <form class="form" id="imageform" onsubmit="changeImage(event)">
@@ -47,7 +47,7 @@
     <!-- Initialize Label Studio -->
     <script>
       let url =
-        "https://images.unsplash.com/photo-1597484661973-ee6cd0b6482c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cGxhY2Vob2xkZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60";
+        "https://images.unsplash.com/photo-1672523197594-b7c6824b498d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjN8fGJhbGxzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60";
 
       //   colors for the tags
       const colors = [
@@ -74,17 +74,21 @@
 
         var labelStudio = new LabelStudio("label-studio", {
           config: `
-      <View>
-        <Image name="img" value="$image" zoom="true"></Image>
-        <RectangleLabels name="tag" toName="img">
-          ${labels
+<View>
+  <Image name="image" value="$image"/>
+  <BrushLabels name="tag" toName="image">
+    ${
+      labels.length > 0
+        ? labels
             .map(
               (label) =>
-                `<Label value="${label.value}" background="${label.background}"></Label>`
+                `<Label value="${label.value}" background="${label.background}"/>`
             )
-            .join("\n")}
-        </RectangleLabels>
-      </View>
+            .join("")
+        : ""
+    }
+  </BrushLabels>
+</View>
     `,
 
           interfaces: [
